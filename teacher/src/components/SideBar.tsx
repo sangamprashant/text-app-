@@ -3,7 +3,7 @@ import {
     HiOutlineClipboardList,
     HiOutlineViewGrid, HiX
 } from "react-icons/hi";
-import { PiUserCircleGearLight } from "react-icons/pi";
+import { PiBooksThin, PiChalkboardTeacherLight, PiUserCircleGearLight } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
 
 import { FaChevronDown } from "react-icons/fa";
@@ -20,8 +20,25 @@ interface SideBarProps {
 }
 
 // Sidebar Links
-const linksList = [
-    { title: "Dashboard", link: "/dashboard", icon: <HiOutlineViewGrid size={22} /> },
+const linksListAdmin = [
+    { title: "Dashboard Admin", link: "/dashboard", icon: <HiOutlineViewGrid size={22} /> },
+    {
+        title: "Courses", icon: <PiBooksThin size={22} />, subLinks: [
+            { title: "All Courses", link: "/courses" },
+            { title: "Add a Course", link: "/courses/add" },
+        ]
+    },
+    {
+        title: "Teachers", icon: <PiChalkboardTeacherLight size={22} />, subLinks: [
+            { title: "All Teachers", link: "/teachers" },
+            { title: "Add a Teacher", link: "/teachers/add" },
+        ]
+    },
+];
+
+const linksListTeacher = [
+    { title: "Dashboard Teacher ", link: "/dashboard", icon: <HiOutlineViewGrid size={22} /> },
+
     {
         title: "Bookings", icon: <HiOutlineClipboardList size={22} />, subLinks: [
             { title: "Search", link: "/bookings/search" },
@@ -35,12 +52,15 @@ const linksList = [
 
 const Dashboard = ({ children }: SideBarProps) => {
     const { isOpen, closeSidebar } = useSidebar();
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
     const [activeSubMenu, setActiveSubMenu] = useState<number[]>([]);
+    let linksList = user?.role === "admin" ? linksListAdmin : linksListTeacher
 
     const toggleSubMenu = (index: number) => {
         activeSubMenu.includes(index) ? setActiveSubMenu(activeSubMenu.filter(i => i !== index)) : setActiveSubMenu([...activeSubMenu, index])
     };
+
+
 
     return (
         <div className="flex h-screen w-full">

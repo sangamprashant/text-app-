@@ -1,18 +1,18 @@
 import CryptoJS from "crypto-js";
 import React, { createContext, useContext, useLayoutEffect, useState } from "react";
 import { ENV } from "../keys";
+import _env from "../utilities/env";
+import { apiRequest } from "../utilities/apis/apiRequest";
+import { User } from "../types/user";
 
 const SECRET_KEY = ENV.secretKey;
-
-interface User {
-    email: string;
-}
 
 interface AuthContextType {
     user: User | null;
     token: string | null;
     login: (userData: User, token: string) => void;
     logout: () => void;
+    authLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,9 +23,9 @@ const encryptData = (data: any) => {
 };
 
 // Decrypt function
-const decryptData = (ciphertext: string) => {
+const decryptData = async (ciphertext: string) => {
     try {
-        const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+        const bytes = await CryptoJS.AES.decrypt(ciphertext, _env.SECRET_KEY);
         return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     } catch (error) {
         return null;
@@ -35,32 +35,47 @@ const decryptData = (ciphertext: string) => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
+    const [authLoading, setAuthLoading] = useState<boolean>(false);
 
     useLayoutEffect(() => {
-        const savedUser = localStorage.getItem("user");
-        const savedToken = localStorage.getItem("token");
+        checkMe()
+    }, []);
+
+
+    const checkMe = async () => {
+        setAuthLoading(true)
+        const savedUser = sessionStorage.getItem("user");
+        const savedToken = sessionStorage.getItem("token");
 
         if (savedUser && savedToken) {
-            const decryptedUser = decryptData(savedUser);
-            const decryptedToken = decryptData(savedToken);
+            const decryptedUser: User = await decryptData(savedUser);
+            const decryptedToken = await decryptData(savedToken);
 
-            console.log({
-                decryptedUser,
-                decryptedToken,
-            })
             if (
                 decryptedUser &&
                 typeof decryptedUser === "object" &&
-                decryptedUser.email
+                decryptedUser.email && decryptedUser.name && decryptedUser.role && decryptedToken
             ) {
-                setUser(decryptedUser);
-                setToken(decryptedToken);
+                try {
+                    const { data }: { data: User } = await apiRequest("/auth/me", "GET", undefined, { Authorization: `Bearer ${decryptedToken}` });
+                    if (decryptedUser.email === data.email && decryptedUser.role === data.role) {
+                        setUser(decryptedUser);
+                        setToken(decryptedToken);
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert("Wrong attempt try again!")
+                    logout();
+                } finally {
+                    setAuthLoading(false)
+                }
             } else {
                 console.warn("Invalid or tampered authentication data. Logging out...");
                 logout();
             }
         }
-    }, []);
+        setAuthLoading(false)
+    }
 
     const login = (userData: User, authToken: string) => {
         const encryptedUser = encryptData(userData);
@@ -69,21 +84,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(userData);
         setToken(authToken);
 
-        localStorage.setItem("user", encryptedUser);
-        localStorage.setItem("token", encryptedToken);
+        sessionStorage.setItem("user", encryptedUser);
+        sessionStorage.setItem("token", encryptedToken);
     };
 
     const logout = () => {
         setUser(null);
         setToken(null);
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("token");
         window.history.replaceState(null, "", "/");
         window.location.href = "/";
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, token, login, logout, authLoading }}>
             {children}
         </AuthContext.Provider>
     );

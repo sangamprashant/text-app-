@@ -1,9 +1,17 @@
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../providers/AuthenticationContext";
 import { FC, useState } from "react";
 import { IoMailOutline } from "react-icons/io5";
+import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { LuEyeClosed } from "react-icons/lu";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { RiAdminLine } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../providers/AuthenticationContext";
+import { User } from "../../types/user";
+import { apiRequest } from "../../utilities/apis/apiRequest";
+
+
+import type { RadioChangeEvent } from 'antd';
+import { Flex, Radio } from 'antd';
 
 export const LoginForm = () => {
     const { login } = useAuth()
@@ -11,37 +19,36 @@ export const LoginForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [showCPassword, setShowCPassword] = useState(false)
-    const [cpassword, setCPassword] = useState("");
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+    const [role, setRole] = useState("admin")
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const trimmedEmail = email.trim();
         const trimmedPassword = password.trim();
-        const trimmedCPassword = cpassword.trim();
 
-        if (!trimmedEmail || !trimmedPassword || !trimmedCPassword) {
+        if (!trimmedEmail || !trimmedPassword) {
             return setError("Please fill all the fields");
         }
-        if (trimmedPassword.length < 6) {
-            return setError("Password must be at least 6 characters");
-        }
-        if (trimmedPassword !== trimmedCPassword) {
-            return setError("Passwords do not match");
-        }
-
-        setLoading(true);
-
-        setTimeout(() => {
-            const userData = { email: trimmedEmail };
-            const token = "sample_jwt_token_123";
-
-            login(userData, token);
+        setLoading(true)
+        try {
+            const { data }: { data: { user: User, token: string } } = await apiRequest(`/auth/login/${role}`, "POST", {
+                email: trimmedEmail,
+                password: trimmedPassword,
+            });
+            login(data.user, data.token);
             navigate("/");
-        }, 3000); // Delay by 3 seconds (3000ms)
+        } catch (error: any) {
+            alert(error.message || "Login failed");
+        } finally {
+            setLoading(false)
+        }
+    };
+
+    const onChange = (e: RadioChangeEvent) => {
+        setRole(e.target.value);
     };
 
     return (
@@ -52,7 +59,30 @@ export const LoginForm = () => {
 
                 <InputField label="Password" type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} Icon={showPassword ? MdOutlineRemoveRedEye : LuEyeClosed} onClick={() => setShowPassword(pre => !pre)} />
 
-                <InputField label="Confirm Password" type={showCPassword ? "text" : "password"} placeholder="••••••••" value={cpassword} onChange={(e) => setCPassword(e.target.value)} Icon={showCPassword ? MdOutlineRemoveRedEye : LuEyeClosed} onClick={() => setShowCPassword(pre => !pre)} />
+                <Radio.Group
+                    onChange={onChange}
+                    value={role}
+                    options={[
+                        {
+                            value: "admin",
+                            label: (
+                                <Flex gap="small" justify="center" align="center" vertical>
+                                    <RiAdminLine style={{ fontSize: 18 }} />
+                                    Admin
+                                </Flex>
+                            ),
+                        },
+                        {
+                            value: "teacher",
+                            label: (
+                                <Flex gap="small" justify="center" align="center" vertical>
+                                    <LiaChalkboardTeacherSolid style={{ fontSize: 18 }} />
+                                    Teacher
+                                </Flex>
+                            ),
+                        },
+                    ]}
+                />
 
                 <p className={`mb-2 text-sm text-red-600 ${error ? "opacity-100" : "opacity-0"} `}>{error}</p>
 

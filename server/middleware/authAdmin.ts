@@ -5,7 +5,7 @@ import _env from "../config/env";
 import { IUser, User } from "../models/User";
 import { handleErrorMsg } from "../utility";
 
-export const authMiddleware = async (
+export const authAdmin = async (
   req: RequestWithUser,
   res: Response,
   next: NextFunction
@@ -16,7 +16,6 @@ export const authMiddleware = async (
     if (!token) {
       return handleErrorMsg(res, 401, "No token, authorization denied!");
     }
-
     const decoded: any = jwt.verify(token, _env.JWT_SECRET as string);
     const user: IUser | null = await User.findById(decoded.id).select(
       "-password"
@@ -24,6 +23,10 @@ export const authMiddleware = async (
 
     if (!user) {
       return handleErrorMsg(res, 404, "User not found!!");
+    }
+
+    if (user.role !== "admin") {
+      return handleErrorMsg(res, 401, "Only admin can preforn the action,authorization denied!");
     }
 
     (req as RequestWithUser).user = user;
