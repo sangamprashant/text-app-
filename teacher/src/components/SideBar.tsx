@@ -5,6 +5,7 @@ import {
 } from "react-icons/hi";
 import { PiBooksThin, PiChalkboardTeacherLight, PiUserCircleGearLight } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
+import { PiStudent } from "react-icons/pi";
 
 import { FaChevronDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -32,6 +33,12 @@ const linksListAdmin = [
         title: "Teachers", icon: <PiChalkboardTeacherLight size={22} />, subLinks: [
             { title: "All Teachers", link: "/teachers" },
             { title: "Add a Teacher", link: "/teachers/add" },
+        ]
+    },
+    {
+        title: "Students", icon: <PiStudent size={22} />, subLinks: [
+            { title: "All Teachers", link: "/students" },
+            { title: "Add a Teacher", link: "/students/add" },
         ]
     },
 ];

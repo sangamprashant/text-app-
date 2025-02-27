@@ -1,19 +1,17 @@
+import { Button, Form, Input, InputNumber } from "antd";
 import React, { useState } from "react";
-import { Form, Input, InputNumber, Button } from "antd";
 import { useAuth } from "../../../providers/AuthenticationContext";
+import { useCoursesList } from "../../../providers/CoursesListContext";
 import { useNotificationContext } from "../../../providers/NotificationContext";
 import { apiRequest, errorMsg } from "../../../utilities/apis/apiRequest";
 
 interface ResponseData {
-    data: {
-        _id: string;
-        name: string;
-        code: string;
-    };
+    data: Course;
     message: string;
 }
 
 const AddCourse: React.FC = () => {
+    const { addCourse } = useCoursesList()
     const [loading, setLoading] = useState(false);
     const { token } = useAuth();
     const { _notification } = useNotificationContext();
@@ -25,7 +23,7 @@ const AddCourse: React.FC = () => {
             const res: ResponseData = await apiRequest("/courses", "POST", values, {
                 Authorization: `Bearer ${token}`,
             });
-
+            addCourse(res.data)
             _notification.Success("Course Added", `Course "${res.data.name}" was added successfully!`);
             form.resetFields();
         } catch (error: unknown) {

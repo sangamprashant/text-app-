@@ -1,7 +1,8 @@
+import ViewUsers from "../teacher-student/view"
 
 const ViewTeachersC = () => {
     return (
-        <div>ViewTeachersC</div>
+        <ViewUsers type="teacher" />
     )
 }
 

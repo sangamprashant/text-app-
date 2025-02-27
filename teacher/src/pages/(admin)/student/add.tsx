@@ -7,8 +7,8 @@ const AddTeacherPage = () => {
     return (
         <RollCheck role='admin'>
             <>
-                <PageHeader title="Add a Teacher" icon={<PiChalkboardTeacherLight />} />
-                <Admin.AddTeacherC />
+                <PageHeader title="Add a Student" icon={<PiChalkboardTeacherLight />} />
+                <Admin.AddStudentC  />
             </>
         </RollCheck>
     )

@@ -17,6 +17,8 @@ const ViewCourse: React.FC = () => {
     const handleDelete = async () => {
         if (!selectedCourse) return;
         deleteCourse(selectedCourse._id)
+        setSelectedCourse(null)
+        setIsModalVisible(false)
     };
 
     const columns = [
@@ -63,6 +65,7 @@ const ViewCourse: React.FC = () => {
                 okText="Yes, Delete"
                 cancelText="Cancel"
                 okType="danger"
+                centered
             >
                 <p>Are you sure you want to delete <strong>{selectedCourse?.name}</strong>?</p>
                 <p>This action cannot be undone.</p>

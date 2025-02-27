@@ -10,7 +10,7 @@ export enum UserRole {
 export interface IUser extends Document {
   name: string;
   email: string;
-  password: string;
+  password: string; 
   role: UserRole;
   course?: mongoose.Schema.Types.ObjectId;
   comparePassword(password: string): Promise<boolean>;
@@ -26,14 +26,6 @@ const UserSchema: Schema<IUser> = new Schema(
   },
   { timestamps: true }
 );
-
-// Ensure only students have a course before saving
-UserSchema.pre<IUser>("save", function (next) {
-  if (this.role !== UserRole.STUDENT) {
-    this.course = undefined; // Remove course for non-students
-  }
-  next();
-});
 
 // Hash password before saving
 UserSchema.pre<IUser>("save", async function (next) {

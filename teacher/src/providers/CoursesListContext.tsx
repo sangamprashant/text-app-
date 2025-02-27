@@ -3,7 +3,6 @@ import { useAuth } from "./AuthenticationContext";
 import { useNotificationContext } from "./NotificationContext";
 import { apiRequest, errorMsg } from "../utilities/apis/apiRequest";
 
-
 interface CoursesListContextType {
     courses: Course[];
     loading: boolean;
@@ -38,7 +37,7 @@ export const CoursesListProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     // Add course
     const addCourse = (course: Course) => {
-        setCourses((prevCourses) => [...prevCourses, course]);
+        setCourses((prevCourses) => [course, ...prevCourses]);
     };
 
     // Delete course
@@ -56,7 +55,7 @@ export const CoursesListProvider: React.FC<{ children: React.ReactNode }> = ({ c
     };
 
     useEffect(() => {
-        if (user)
+        if (user?.role === "admin")
             fetchCourses();
     }, [token, user]);
 

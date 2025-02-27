@@ -4,7 +4,7 @@ import { handleError, handleErrorMsg, successResponse } from "../utility";
 
 /**
  * @desc    Create Teacher or Student
- * @route   POST /api/v1/admin/create/
+ * @route   POST /api/v1/teacher-student/
  * @access  Admin Only (Handled by Middleware)
  */
 export const createUser = async (req: Request, res: Response) => {
@@ -51,6 +51,31 @@ export const createUser = async (req: Request, res: Response) => {
       },
       "User created successfully"
     );
+  } catch (error) {
+    console.error(error);
+    handleError(res, error);
+  }
+};
+
+
+/**
+ * @desc    Get Teachers or Students
+ * @route   GET /api/v1/teacher-student
+ * @access  Admin Only (Handled by Middleware)
+ */
+export const getUsersByRole = async (req: Request, res: Response) => {
+  try {
+    const { type } = req.query as { type: "teacher" | "student" };
+
+    // Validate user type
+    if (!type || !Object.values(UserRole).includes(type as UserRole)) {
+      return handleErrorMsg(res, 400, "Invalid or missing user type.");
+    }
+
+    // Fetch users by role
+    const users = await User.find({ role: type }).select("-password").populate("course");
+
+    successResponse(res, users, `${type.charAt(0).toUpperCase() + type.slice(1)}s retrieved successfully`);
   } catch (error) {
     console.error(error);
     handleError(res, error);
