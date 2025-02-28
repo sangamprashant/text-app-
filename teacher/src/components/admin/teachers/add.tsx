@@ -1,4 +1,4 @@
-import AddUser from "../teacher-student/add"
+import AddUser from "../../teacher-student/add"
 
 const AddTeacherC = () => {
     return (

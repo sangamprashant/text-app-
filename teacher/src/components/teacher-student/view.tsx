@@ -1,7 +1,9 @@
-import { Table, Tag, message } from "antd";
+import { Table, Tag } from "antd";
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../../providers/AuthenticationContext";
-import { apiRequest } from "../../../utilities/apis/apiRequest";
+import { useParams } from "react-router-dom";
+import { useAuth } from "../../providers/AuthenticationContext";
+import { useNotificationContext } from "../../providers/NotificationContext";
+import { apiRequest, errorMsg } from "../../utilities/apis/apiRequest";
 
 interface User {
     _id: string;
@@ -19,23 +21,31 @@ const ViewUsers: React.FC<{ type: "teacher" | "student" }> = ({ type }) => {
     const { token } = useAuth()
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const { _notification } = useNotificationContext()
+    const { code } = useParams()
 
     useEffect(() => {
         const fetchUsers = async () => {
+            if (!token) return;
+
+            setLoading(true);
             try {
-                const response = await apiRequest(`/teacher-student?type=${type}`, "GET", undefined, {
+                const response = await apiRequest(`/teacher-student?type=${type}&subject=${code}`, "GET", undefined, {
                     Authorization: `Bearer ${token}`,
                 });
-                setUsers(response.data);
+
+                if (response && response.data) {
+                    setUsers(response.data);
+                }
             } catch (error) {
-                message.error("Failed to fetch users.");
+                _notification.Error("Error", errorMsg(error));
             } finally {
                 setLoading(false);
             }
         };
 
         fetchUsers();
-    }, [type, token]);
+    }, [type, token, code]);
 
     const columns = [
         {

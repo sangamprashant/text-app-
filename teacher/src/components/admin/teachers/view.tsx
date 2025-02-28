@@ -1,4 +1,4 @@
-import ViewUsers from "../teacher-student/view"
+import ViewUsers from "../../teacher-student/view"
 
 const ViewTeachersC = () => {
     return (

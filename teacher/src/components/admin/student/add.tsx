@@ -1,7 +1,8 @@
+import AddUser from "../../teacher-student/add"
 
 const AddStudentC = () => {
     return (
-        <div>AddStudentC</div>
+        <AddUser type="student" />
     )
 }
 

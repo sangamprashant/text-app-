@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom"
 import SideBar from "./components/SideBar"
-import { AddCoursePage, AddTeacherPage, Dashboard, LoginPage, NotFound, SettingPage, ViewCoursePage, ViewTeachersPage } from "./pages"
+import { AddCoursePage, AddQuizPage, AddStudentPage, AddTeacherPage, Dashboard, LoginPage, MyStudentPage, NotFound, SettingPage, ViewCoursePage, ViewStudentsPage, ViewTeachersPage } from "./pages"
 import { useAuth } from "./providers/AuthenticationContext"
 
 function App() {
@@ -22,8 +22,11 @@ function App() {
                       <Route path="/courses" element={<ViewCoursePage />} />
                       <Route path="/courses/add" element={<AddCoursePage />} />
                       <Route path="/teachers" element={<ViewTeachersPage />} />
+                      <Route path="/teachers/course/:code" element={<ViewTeachersPage />} />
                       <Route path="/teachers/add" element={<AddTeacherPage />} />
-
+                      <Route path="/students" element={<ViewStudentsPage />} />
+                      <Route path="/students/course/:code" element={<ViewStudentsPage />} />
+                      <Route path="/students/add" element={<AddStudentPage />} />
                       <Route path="/settings" element={<SettingPage />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
@@ -34,6 +37,8 @@ function App() {
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/settings" element={<SettingPage />} />
+                      <Route path="/students" element={<MyStudentPage />} />
+                      <Route path="/quiz/add" element={<AddQuizPage />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </>

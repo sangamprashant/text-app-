@@ -3,15 +3,15 @@ import { PageHeader } from '../../../components'
 import { Admin } from '../../../components/admin'
 import RollCheck from '../../../utilities/checks/RollCheck'
 
-const AddStudentPage = () => {
+const ViewStudentsPage = () => {
     return (
         <RollCheck role='admin'>
             <>
-                <PageHeader title="Add a Student" icon={<PiStudent />} />
-                <Admin.AddStudentC />
+                <PageHeader title="Manage Students" icon={<PiStudent />} />
+                <Admin.ViewStudentC />
             </>
         </RollCheck>
     )
 }
 
-export default AddStudentPage
+export default ViewStudentsPage

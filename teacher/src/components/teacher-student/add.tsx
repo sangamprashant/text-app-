@@ -1,9 +1,9 @@
 import { Button, Form, Input, Select } from "antd";
 import { useState } from "react";
-import { useAuth } from "../../../providers/AuthenticationContext";
-import { useCoursesList } from "../../../providers/CoursesListContext";
-import { useNotificationContext } from "../../../providers/NotificationContext";
-import { apiRequest } from "../../../utilities/apis/apiRequest";
+import { useAuth } from "../../providers/AuthenticationContext";
+import { useCoursesList } from "../../providers/CoursesListContext";
+import { useNotificationContext } from "../../providers/NotificationContext";
+import { apiRequest } from "../../utilities/apis/apiRequest";
 
 const AddUser = ({ type }: { type: "student" | 'teacher' }) => {
   const [form] = Form.useForm();
@@ -33,7 +33,7 @@ const AddUser = ({ type }: { type: "student" | 'teacher' }) => {
 
   return (
     <div className="p-4">
-      <h2 className="mb-4">Add New Teacher</h2>
+      <h2 className="mb-4 ">Add New {type}</h2>
       <Form
         form={form}
         layout="vertical"
@@ -43,9 +43,9 @@ const AddUser = ({ type }: { type: "student" | 'teacher' }) => {
           <Form.Item
             label="Name"
             name="name"
-            rules={[{ required: true, message: "Teacher name is required" }]}
+            rules={[{ required: true, message: `${type} name is required` }]}
           >
-            <Input placeholder="Enter teacher's name" />
+            <Input placeholder={`Enter ${type}'s name`} />
           </Form.Item>
 
           <Form.Item
@@ -83,7 +83,7 @@ const AddUser = ({ type }: { type: "student" | 'teacher' }) => {
         </div>
 
         <Button type="primary" htmlType="submit" loading={loading} className="w-full">
-          Add Teacher
+          Add {type}
         </Button>
       </Form>
     </div>

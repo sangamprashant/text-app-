@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { User, UserRole } from "../models/User";
+import { Course } from "../models/Course";
+import { IUser, User, UserRole } from "../models/User";
 import { handleError, handleErrorMsg, successResponse } from "../utility";
 
 /**
@@ -57,7 +58,6 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-
 /**
  * @desc    Get Teachers or Students
  * @route   GET /api/v1/teacher-student
@@ -65,17 +65,42 @@ export const createUser = async (req: Request, res: Response) => {
  */
 export const getUsersByRole = async (req: Request, res: Response) => {
   try {
-    const { type } = req.query as { type: "teacher" | "student" };
-
-    // Validate user type
+    const { type, subject } = req.query as {
+      type: keyof typeof UserRole;
+      subject?: string;
+    };
     if (!type || !Object.values(UserRole).includes(type as UserRole)) {
       return handleErrorMsg(res, 400, "Invalid or missing user type.");
     }
 
-    // Fetch users by role
-    const users = await User.find({ role: type }).select("-password").populate("course");
+    let users: IUser[] = [];
 
-    successResponse(res, users, `${type.charAt(0).toUpperCase() + type.slice(1)}s retrieved successfully`);
+    const subjectCode =
+      subject && subject !== "undefined" ? Number(subject) : undefined;
+
+    if (subjectCode && !isNaN(subjectCode)) {
+      const course = await Course.findOne({ code: subjectCode })
+        .select("_id")
+        .lean();
+      if (course) {
+        users = await User.find({ role: type, course: course._id })
+          .select("-password")
+          .populate("course")
+          .lean();
+      }
+    } else {
+      // Fetch users by role
+      users = await User.find({ role: type })
+        .select("-password")
+        .populate("course")
+        .lean();
+    }
+
+    successResponse(
+      res,
+      users,
+      `${type.charAt(0).toUpperCase() + type.slice(1)}s retrieved successfully`
+    );
   } catch (error) {
     console.error(error);
     handleError(res, error);

@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import {
-    HiOutlineClipboardList,
-    HiOutlineViewGrid, HiX
-} from "react-icons/hi";
-import { PiBooksThin, PiChalkboardTeacherLight, PiUserCircleGearLight } from "react-icons/pi";
+import { HiOutlineViewGrid, HiX } from "react-icons/hi";
+import { PiBooksThin, PiChalkboardTeacherLight, PiStudent, PiUserCircleGearLight } from "react-icons/pi";
 import { TbLogout2 } from "react-icons/tb";
-import { PiStudent } from "react-icons/pi";
+import { MdOutlineQuiz } from "react-icons/md";
 
 import { FaChevronDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuth } from "../providers/AuthenticationContext";
+import { useCoursesList } from "../providers/CoursesListContext";
 import { useSidebar } from "../providers/SidebarContext";
 import Logo from "./sidebar/Logo";
 import SideLinks from "./sidebar/SideLinks";
@@ -20,54 +18,70 @@ interface SideBarProps {
     children: React.ReactNode;
 }
 
-// Sidebar Links
-const linksListAdmin = [
-    { title: "Dashboard Admin", link: "/dashboard", icon: <HiOutlineViewGrid size={22} /> },
-    {
-        title: "Courses", icon: <PiBooksThin size={22} />, subLinks: [
-            { title: "All Courses", link: "/courses" },
-            { title: "Add a Course", link: "/courses/add" },
-        ]
-    },
-    {
-        title: "Teachers", icon: <PiChalkboardTeacherLight size={22} />, subLinks: [
-            { title: "All Teachers", link: "/teachers" },
-            { title: "Add a Teacher", link: "/teachers/add" },
-        ]
-    },
-    {
-        title: "Students", icon: <PiStudent size={22} />, subLinks: [
-            { title: "All Teachers", link: "/students" },
-            { title: "Add a Teacher", link: "/students/add" },
-        ]
-    },
-];
-
-const linksListTeacher = [
-    { title: "Dashboard Teacher ", link: "/dashboard", icon: <HiOutlineViewGrid size={22} /> },
-
-    {
-        title: "Bookings", icon: <HiOutlineClipboardList size={22} />, subLinks: [
-            { title: "Search", link: "/bookings/search" },
-            { title: "Create Booking", link: "/bookings/create" },
-            { title: "Payment Received", link: "/templates/create" },
-            { title: "Completed", link: "/templates/create" },
-        ]
-    },
-
-];
+interface listType {
+    type: "teachers" | "students"
+}
 
 const Dashboard = ({ children }: SideBarProps) => {
     const { isOpen, closeSidebar } = useSidebar();
     const { logout, user } = useAuth();
     const [activeSubMenu, setActiveSubMenu] = useState<number[]>([]);
+    const { courses } = useCoursesList();
+
+    function list({ type }: listType) {
+        let items = [];
+        for (const course of courses as Course[]) {
+            let i = { title: course.name, link: `/${type}/course/${course.code}` }
+            items.push(i)
+        }
+        return items
+    }
+
+    // Sidebar Links
+    const linksListAdmin = [
+        { title: "Dashboard Admin", link: "/dashboard", icon: <HiOutlineViewGrid size={22} /> },
+        {
+            title: "Courses", icon: <PiBooksThin size={22} />, subLinks: [
+                { title: "Add a Course", link: "/courses/add" },
+                { title: "All Courses", link: "/courses" },
+            ]
+        },
+        {
+            title: "Teachers", icon: <PiChalkboardTeacherLight size={22} />, subLinks: [
+                { title: "Add a Teacher", link: "/teachers/add" },
+                { title: "All Teachers", link: "/teachers" },
+                ...list({ type: "teachers" })
+            ]
+        },
+        {
+            title: "Students", icon: <PiStudent size={22} />, subLinks: [
+                { title: "Add a Student", link: "/students/add" },
+                { title: "All Students", link: "/students" },
+                ...list({ type: "students" })
+            ]
+        },
+    ];
+
+    const linksListTeacher = [
+        { title: "Dashboard Teacher ", link: "/dashboard", icon: <HiOutlineViewGrid size={22} /> },
+        {
+            title: "Students", icon: <PiStudent size={22} />, subLinks: [
+                { title: "My Students", link: "/students" },
+            ]
+        },
+        {
+            title: "Quiz", icon: <MdOutlineQuiz size={22} />, subLinks: [
+                { title: "All Quiz", link: "/quiz" },
+                { title: "Add a Quiz", link: "/quiz/add" },
+            ]
+        },
+    ];
+
     let linksList = user?.role === "admin" ? linksListAdmin : linksListTeacher
 
     const toggleSubMenu = (index: number) => {
         activeSubMenu.includes(index) ? setActiveSubMenu(activeSubMenu.filter(i => i !== index)) : setActiveSubMenu([...activeSubMenu, index])
     };
-
-
 
     return (
         <div className="flex h-screen w-full">
@@ -102,9 +116,9 @@ const Dashboard = ({ children }: SideBarProps) => {
                             )}
 
                             {/* Sub Navigation (if available) */}
-                            {link.subLinks && activeSubMenu.includes(index) && (
+                            {link?.subLinks && activeSubMenu.includes(index) && (
                                 <div className="pl-6 space-y-1">
-                                    {link.subLinks.map((subLink, subIndex) => (
+                                    {link?.subLinks.map((subLink, subIndex) => (
                                         <SideLinks key={subIndex} {...subLink} className="text-gray-400 border-s rounded-none border-white/10" />
                                     ))}
                                 </div>

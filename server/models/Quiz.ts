@@ -2,7 +2,8 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IQuiz extends Document {
   title: string;
-  teacherId: mongoose.Schema.Types.ObjectId;
+  time: number;
+  courseId: mongoose.Schema.Types.ObjectId;
   questions: {
     question: string;
     options: string[];
@@ -13,7 +14,8 @@ export interface IQuiz extends Document {
 const QuizSchema: Schema<IQuiz> = new Schema(
   {
     title: { type: String, required: true },
-    teacherId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    time: { type: Number, required: true },
+    courseId: { type: Schema.Types.ObjectId, ref: "Course", required: true },
     questions: [
       {
         question: { type: String, required: true },
