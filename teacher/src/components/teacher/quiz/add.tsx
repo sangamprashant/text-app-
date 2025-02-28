@@ -1,10 +1,12 @@
 import { Button, Card, Form, Input, InputNumber } from "antd";
 import { useState } from "react";
 import { QuestionForm } from "./QuestionForm";
-import { errorMsg } from "../../../utilities/apis/apiRequest";
+import { apiRequest, errorMsg } from "../../../utilities/apis/apiRequest";
 import { useNotificationContext } from "../../../providers/NotificationContext";
+import { useAuth } from "../../../providers/AuthenticationContext";
 
 const AddQuizComponent = () => {
+    const { token } = useAuth()
     const { _notification } = useNotificationContext()
     const [questions, setQuestions] = useState<Question[]>([
         { question: "", options: ["", "", "", ""], correctAnswer: "" },
@@ -26,34 +28,46 @@ const AddQuizComponent = () => {
         setQuestions(updatedQuestions);
     };
 
-    const handleSubmit = (values: any) => {
+    const handleSubmit = async (values: any) => {
         try {
             const processedQuestions = questions.map((q) => {
                 if (!q.question.trim() || !Array.isArray(q.options) || q.options.length < 4 || !q.correctAnswer.trim()) {
                     throw new Error("Each question must have a question text, four options, and a correct answer.");
                 }
 
-                if (!q.options.every((opt: string) => typeof opt === "string" && opt.trim().length > 0)) {
+                const trimmedOptions = q.options.map((opt: string) => opt.trim());
+
+                if (!trimmedOptions.every((opt) => opt.length > 0)) {
                     throw new Error("Each option must be a non-empty string.");
+                }
+
+                if (new Set(trimmedOptions).size !== trimmedOptions.length) {
+                    throw new Error("Some question options are repeated.");
                 }
 
                 return {
                     question: q.question.trim(),
-                    options: q.question,
-                    correctAnswer: q.correctAnswer,
+                    options: trimmedOptions,
+                    correctAnswer: q.correctAnswer.trim(),
                 };
             });
 
             const formData = {
-                title: values.title,
+                title: values.title.trim(),
                 time: values.time,
                 questions: processedQuestions,
             };
-            console.log("Quiz Data Submitted:", formData);
+
+            const res = await apiRequest("/teacher.quiz", "POST", formData, {
+                Authorization: `Bearer ${token}`,
+            })
+
+            _notification.Success("Success", res.message)
         } catch (error) {
             _notification.Error("Error", errorMsg(error));
         }
     };
+
 
     return (
         <Card title="Create a New Quiz">

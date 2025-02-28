@@ -10,6 +10,7 @@ import SettingPage from "./(main)/settings";
 import NotFound from "./(notfound)";
 import MyStudentPage from "./(teacher)/my-student";
 import { AddQuizPage } from "./(teacher)/quiz/add";
+import { ViewQuizPage } from "./(teacher)/quiz/view";
 
-export { AddCoursePage, AddQuizPage, AddStudentPage, AddTeacherPage, Dashboard, LoginPage, MyStudentPage, NotFound, SettingPage, ViewCoursePage, ViewStudentsPage, ViewTeachersPage };
+export { AddCoursePage, AddQuizPage, AddStudentPage, AddTeacherPage, Dashboard, LoginPage, MyStudentPage, NotFound, SettingPage, ViewCoursePage, ViewQuizPage, ViewStudentsPage, ViewTeachersPage };
 

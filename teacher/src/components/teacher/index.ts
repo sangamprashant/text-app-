@@ -1,4 +1,6 @@
 import MyStudentsComponent from "./MyStudents";
 import AddQuizComponent from "./quiz/add";
+import { ViewQuizComponent } from "./quiz/view";
 
-export { MyStudentsComponent, AddQuizComponent};
+export { AddQuizComponent, MyStudentsComponent, ViewQuizComponent };
+
