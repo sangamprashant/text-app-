@@ -27,8 +27,7 @@ export const ViewQuizComponent = () => {
         fetchQuizzes();
     }, []);
 
-    // Define table columns
-    const columns: ColumnsType = [
+    const columns: ColumnsType<Question> = [
         {
             title: "Title",
             dataIndex: "title",
@@ -43,7 +42,7 @@ export const ViewQuizComponent = () => {
         {
             title: "Actions",
             key: "actions",
-            render: (_, record) => (
+            render: (_, record: Question) => (
                 <Space>
                     <Button type="primary">View</Button>
                     <Button danger>Delete</Button>

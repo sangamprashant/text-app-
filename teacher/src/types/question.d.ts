@@ -1,7 +1,9 @@
 interface Question {
+  _id?: string;
   question: string;
   options: string[];
   correctAnswer: string;
+  time: numberl;
 }
 
 interface QuestionFormProps {
@@ -11,5 +13,3 @@ interface QuestionFormProps {
   onRemove: () => void;
   canRemove: boolean;
 }
-
-
