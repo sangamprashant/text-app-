@@ -12,5 +12,7 @@ app.use("/api/v1/teacher-student", require("./routes/admin.user"));
 // -----------------------------teacher-----------------------------
 app.use("/api/v1/teacher", require("./routes/teacher.student"));
 app.use("/api/v1/teacher.quiz", require("./routes/teacher.quiz"));
-
+// -----------------------------student-----------------------------
+app.use("/api/v1/student.quiz", require("./routes/student.quiz"));
+// -----------------------------------------------------------------
 app.listen(5000, () => console.log("Server running on port 5000"));

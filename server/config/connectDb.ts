@@ -7,7 +7,7 @@ const connectDb = () => {
     .connect("mongodb://localhost:27017/quizApp")
     .then(async () => {
       console.log("MongoDB connected");
-      await initializeAdmin(); // Ensure admin user exists
+      await initializeAdmin(); 
     })
     .catch((err) => console.error("MongoDB Connection Error:", err));
 };

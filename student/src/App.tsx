@@ -1,13 +1,17 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import Navbar from "./components/(navbar)"
-import Home from "./components/(home)"
-import Footer from "./components/(home)/footer"
+import { NotFoundPage } from "./(page)"
 import { useAuth } from "./(providers)/AuthContext"
 import { Login } from "./components/(auth)"
-import { NotFoundPage } from "./(page)"
+import Home from "./components/(home)"
+import Footer from "./components/(home)/footer"
+import Navbar from "./components/(navbar)"
+import { Quiz } from "./components/(quiz)"
+import { Result } from "./components/(result)"
+import { useAppContext } from "./(providers)/AppContext"
 
 const App = () => {
   const { user, authLoading } = useAuth()
+  const { quizActive } = useAppContext()
   return (
     <BrowserRouter>
       {
@@ -16,12 +20,14 @@ const App = () => {
           <Loading />
           :
           <>
-            <Navbar />
+            {!quizActive && <Navbar />}
             {
               user
                 ?
                 <Routes>
                   <Route path="/" element={<Home />} />
+                  <Route path="/quiz/:id" element={<Quiz />} />
+                  <Route path="/result/:id" element={<Result />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
                 :
@@ -30,7 +36,7 @@ const App = () => {
                   <Route path="/login" element={<Login />} />
                 </Routes>
             }
-            <Footer />
+            {!quizActive && <Footer />}
           </>
       }
     </BrowserRouter>
