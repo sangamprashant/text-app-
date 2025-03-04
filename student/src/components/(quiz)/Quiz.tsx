@@ -8,10 +8,12 @@ import QuizDashboard from "./QuizOpen";
 const Quiz = () => {
   const { id } = useParams();
   const { token } = useAuth();
-  const { quizActive, quizData, handleQuizData, startQuiz, endQuiz } = useAppContext();
+  const { quizActive, quizData, handleQuizData, startQuiz, endQuiz, ctx, mac } = useAppContext();
+  const { handleQuizSubmission } = ctx
+  const { time, setTime } = mac
   const [loadingQuiz, setLoadingQuiz] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [time, setTime] = useState<number>(5);
+
   const [timerActive, setTimerActive] = useState(false);
 
   useEffect(() => {
@@ -99,23 +101,17 @@ const Quiz = () => {
       document.documentElement.requestFullscreen().catch(console.error);
     }
 
-    const countdown = setInterval(() => {
-      setTime((prev) => prev - 1);
-    }, 1000);
+    if (!quizActive) {
+      const countdown = setInterval(() => {
+        setTime((prev: number) => prev - 1);
+      }, 1000);
 
-    setTimeout(() => {
-      clearInterval(countdown);
-      startQuiz();
+      setTimeout(() => {
+        clearInterval(countdown);
+        startQuiz();
 
-    }, 5000);
-  };
-
-  // Handle quiz submission
-  const handleQuizSubmission = () => {
-    // console.log("Submitting quiz:", answers);
-    alert("Quiz submitted successfully! ✅");
-    endQuiz();
-    if (document.exitFullscreen) document.exitFullscreen();
+      }, 5000);
+    }
   };
 
   if (loadingQuiz) return <div className="flex justify-center items-center min-h-36 py-20">Loading Quiz...</div>;

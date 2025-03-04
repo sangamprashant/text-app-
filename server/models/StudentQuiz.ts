@@ -16,10 +16,8 @@ const StudentQuizSchema: Schema<IStudentQuiz> = new Schema(
     studentId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     quizId: { type: Schema.Types.ObjectId, ref: "Quiz", required: true },
     courseId: { type: Schema.Types.ObjectId, ref: "Course", required: true }, 
-
     startedAt: { type: Date, required: true, default: Date.now },
     completedAt: { type: Date, default: null },
-
     answers: [
       {
         questionId: { type: Schema.Types.ObjectId, required: true, ref: "Quiz.questions" },

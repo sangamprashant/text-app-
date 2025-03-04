@@ -47,7 +47,11 @@ export const getQuizById = async (req: RequestWithUser, res: Response) => {
     }
 
     if (req.user.course.toString() !== quiz.courseId.toString()) {
-      return handleErrorMsg(res, 403, "You are not authorized to access this quiz");
+      return handleErrorMsg(
+        res,
+        403,
+        "You are not authorized to access this quiz"
+      );
     }
 
     // Populate questions if needed
@@ -55,13 +59,12 @@ export const getQuizById = async (req: RequestWithUser, res: Response) => {
 
     successResponse(res, populatedQuiz, "Quiz fetched successfully!");
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return handleError(res, error);
   }
 };
 
-
-const submitQuiz = async (req: RequestWithUser, res: Response) => {
+export const submitQuiz = async (req: RequestWithUser, res: Response) => {
   const { quizId, answers } = req.body;
   if (!req.user) {
     return handleErrorMsg(res, 401, "Unauthorized: No user found");
@@ -69,7 +72,8 @@ const submitQuiz = async (req: RequestWithUser, res: Response) => {
   const { _id: studentId } = req.user;
 
   const quiz = await Quiz.findById(quizId);
-  if (!quiz) return res.status(404).json({ message: "Quiz not found" });
+
+  if (!quiz) return handleErrorMsg(res, 404, "Quiz not found");
 
   let correctAnswers = 0;
   const studentAnswers = answers.map(
@@ -89,7 +93,6 @@ const submitQuiz = async (req: RequestWithUser, res: Response) => {
   );
 
   const totalQuestions = quiz.questions.length;
-  const score = (correctAnswers / totalQuestions) * 100;
 
   const studentQuiz = new StudentQuiz({
     studentId,
@@ -99,21 +102,16 @@ const submitQuiz = async (req: RequestWithUser, res: Response) => {
     answers: studentAnswers,
     totalQuestions,
     correctAnswers,
-    score,
   });
 
   await studentQuiz.save();
-  res.json({ message: "Quiz submitted successfully", studentQuiz });
+  successResponse(res, studentQuiz, "Quiz submitted successfully");
 };
 
-export const getStudentQuizResult = async (
-  req: RequestWithUser,
-  res: Response
-) => {
+const getStudentQuizResult = async (req: RequestWithUser, res: Response) => {
   try {
     const { studentId, quizId } = req.params;
 
-    // Fetch the quiz with all questions
     const quiz = await Quiz.findById(quizId);
     if (!quiz) return res.status(404).json({ message: "Quiz not found" });
 

@@ -15,8 +15,9 @@ const QuizOpenControls = () => {
             handleSelectedQuestion(selectedQuestionIndex - 1);
         }
     };
+
     return (
-        <div className="bg-gray-200 rounded p-2 flex justify-between">
+        <div className="rounded p-2 flex justify-between">
             {selectedQuestionIndex > 0 ? (
                 <button
                     onClick={handlePrevious}

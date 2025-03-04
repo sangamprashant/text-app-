@@ -7,12 +7,12 @@ import { AppProvider } from './(providers)/AppContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <>
-    <AppProvider>
-      <NotificationProvider>
-        <AuthProvider>
+    <NotificationProvider>
+      <AuthProvider>
+        <AppProvider>
           <App />
-        </AuthProvider>
-      </NotificationProvider>
-    </AppProvider>
+        </AppProvider>
+      </AuthProvider>
+    </NotificationProvider>
   </>
 )
