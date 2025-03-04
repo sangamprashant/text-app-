@@ -5,7 +5,7 @@ import { Login } from "./components/(auth)"
 import Home from "./components/(home)"
 import Footer from "./components/(home)/footer"
 import Navbar from "./components/(navbar)"
-import { Quiz } from "./components/(quiz)"
+import { Quiz, QuizOpen } from "./components/(quiz)"
 import { Result } from "./components/(result)"
 import { useAppContext } from "./(providers)/AppContext"
 
@@ -28,12 +28,13 @@ const App = () => {
                   <Route path="/" element={<Home />} />
                   <Route path="/quiz/:id" element={<Quiz />} />
                   <Route path="/result/:id" element={<Result />} />
-                  <Route path="*" element={<NotFoundPage />} />
+                  <Route path="*" element={<QuizOpen />} />
                 </Routes>
                 :
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="*" element={<QuizOpen />} />
                 </Routes>
             }
             {!quizActive && <Footer />}
