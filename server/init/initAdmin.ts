@@ -1,5 +1,8 @@
 import _env from "../config/env";
 import { User, UserRole } from "../models/User";
+import { initializeCourse } from "./initCourse";
+import { initializeQuiz } from "./initializeQuiz ";
+import { createUserWithRole } from "./initUser";
 
 export const initializeAdmin = async () => {
   const existingAdmin = await User.findOne({ role: UserRole.ADMIN });
@@ -11,5 +14,13 @@ export const initializeAdmin = async () => {
       role: UserRole.ADMIN,
     });
     console.log("Admin created...");
+    // run to create a dummy data so that you can run the application
+    const courseId: string = (await initializeCourse()).toString();
+    // Create a teacher
+    await createUserWithRole(UserRole.TEACHER, courseId);
+    // Create a student
+    await createUserWithRole(UserRole.STUDENT, courseId);
+    // Create a sample quiz
+    await initializeQuiz(courseId);
   }
 };

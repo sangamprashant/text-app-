@@ -1,11 +1,15 @@
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
         <footer className="bg-orange-400 text-white py-8 px-6 mt-10">
             <div className="container mx-auto flex flex-wrap justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold">Le<span className="italic">Arn</span></h2>
+                    <Link to="/" className="flex items-center gap-2 text-white text-xl font-bold">
+                        <img src="/logo.png" width={40} height={40} />
+                        <span>QUIZLY</span>
+                    </Link>
                     <ul className="mt-4 space-y-2">
                         <li>Work with us</li>
                         <li>Privacy Policy</li>

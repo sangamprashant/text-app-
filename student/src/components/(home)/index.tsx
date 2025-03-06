@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from "react";
 import { About, QuizlyInfo, Services } from "../../(page)";
 import { useAuth } from "../../(providers)/AuthContext";
 import ProgressDemo from "./progress";
-import TabButtons from "./tabs";
+// import TabButtons from "./tabs";
 import TestList from "./tests";
 
 const Home = () => {
@@ -28,7 +28,7 @@ const Home = () => {
                 <h1 className="text-4xl font-bold mb-4">Welcome to the <span className="text-gray-500">QUIZLY</span></h1>
                 <p className="text-lg mb-6">Test your knowledge with fun and challenging quizzes!</p>
                 {user && <>
-                    <TabButtons />
+                    {/* <TabButtons /> */}
                     <ProgressDemo completedCount={completedCount}/>
                 </>}
             </div>
