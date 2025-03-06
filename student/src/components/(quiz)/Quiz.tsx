@@ -36,49 +36,49 @@ const Quiz = () => {
   }, [id, token]);
 
   // Disable right-click
-  // useEffect(() => {
-  //   const disableRightClick = (e: MouseEvent) => e.preventDefault();
-  //   if (quizActive) document.addEventListener("contextmenu", disableRightClick);
-  //   return () => document.removeEventListener("contextmenu", disableRightClick);
-  // }, [quizActive]);
+  useEffect(() => {
+    const disableRightClick = (e: MouseEvent) => e.preventDefault();
+    if (quizActive) document.addEventListener("contextmenu", disableRightClick);
+    return () => document.removeEventListener("contextmenu", disableRightClick);
+  }, [quizActive]);
 
   // Disable keyboard shortcuts
-  // useEffect(() => {
-  //   const disableKeyboard = (e: KeyboardEvent) => e.preventDefault();
-  //   if (quizActive) {
-  //     document.addEventListener("keydown", disableKeyboard);
-  //     document.addEventListener("keypress", disableKeyboard);
-  //   }
-  //   return () => {
-  //     document.removeEventListener("keydown", disableKeyboard);
-  //     document.removeEventListener("keypress", disableKeyboard);
-  //   };
-  // }, [quizActive]);
+  useEffect(() => {
+    const disableKeyboard = (e: KeyboardEvent) => e.preventDefault();
+    if (quizActive) {
+      document.addEventListener("keydown", disableKeyboard);
+      document.addEventListener("keypress", disableKeyboard);
+    }
+    return () => {
+      document.removeEventListener("keydown", disableKeyboard);
+      document.removeEventListener("keypress", disableKeyboard);
+    };
+  }, [quizActive]);
 
   // Prevent tab switching & minimize detection
-  // useEffect(() => {
-  //   const handleVisibilityChange = () => {
-  //     if (document.hidden) {
-  //       alert("You switched tabs! The quiz will be submitted.");
-  //       handleQuizSubmission();
-  //     }
-  //   };
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        alert("You switched tabs! The quiz will be submitted.");
+        handleQuizSubmission();
+      }
+    };
 
-  //   const handleFocusLoss = () => {
-  //     alert("Focus lost! Your quiz will be submitted.");
-  //     handleQuizSubmission();
-  //   };
+    const handleFocusLoss = () => {
+      alert("Focus lost! Your quiz will be submitted.");
+      handleQuizSubmission();
+    };
 
-  //   if (quizActive) {
-  //     document.addEventListener("visibilitychange", handleVisibilityChange);
-  //     window.addEventListener("blur", handleFocusLoss);
-  //   }
+    if (quizActive) {
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      window.addEventListener("blur", handleFocusLoss);
+    }
 
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
-  //     window.removeEventListener("blur", handleFocusLoss);
-  //   };
-  // }, [quizActive]);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleFocusLoss);
+    };
+  }, [quizActive]);
 
   // Ensure full-screen mode remains active
   useEffect(() => {

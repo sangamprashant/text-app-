@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import { apiRequest, errorMsg } from "../utilities/api/apiRequest";
 import { useAuth } from "./AuthContext";
 import { useNotificationContext } from "./NotificationContext";
+import { useNavigate } from "react-router-dom";
 
 interface AppContextType {
     quizActive: boolean;
@@ -22,6 +23,7 @@ interface AppContextType {
     mac: {
         time: number;
         setTime: React.Dispatch<React.SetStateAction<number>>;
+        loadindQuizSub: boolean
     }
 }
 
@@ -38,6 +40,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const [answers, setAnswers] = useState<AnswersTypes[]>([])
     const [timeLeft, setTimeLeft] = useState(0);
     const [time, setTime] = useState<number>(5);
+    const [loadindQuizSub, setLoadingQuizSub] = useState<boolean>(false)
+    const navigate = useNavigate()
 
     const startQuiz = () => {
         setQuizActive(true)
@@ -59,17 +63,23 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const handleQuizSubmission = async () => {
 
         try {
-            const response: { data: { message: string; data: QuizData } } = await apiRequest("/student.quiz", "POST", { answers, quizId: quizData?._id }, {
-                // Authorization: `Bearer ${token}`,
+            const response: { message: string; data: string } = await apiRequest("/student.quiz", "POST", { answers, quizId: quizData?._id }, {
+                Authorization: `Bearer ${token}`,
             })
 
-            _notification.Success("Quiz Submitted", response.data.message);
+            console.log(response)
+
+            _notification.Success("Quiz Submitted", response.message);
 
             endQuiz();
             if (document.exitFullscreen) document.exitFullscreen();
 
+            navigate(`/result/${response.data}`)
+
         } catch (error) {
             _notification.Error("Submission Failed", errorMsg(error) || "An error occurred while submitting the quiz.");
+        } finally {
+            setLoadingQuizSub(false)
         }
 
     };
@@ -97,7 +107,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
 
     useEffect(() => {
-        if (timeLeft <= 0) {
+        if (timeLeft <= 0 && quizActive) {
             handleQuizSubmission(); // Automatically submit when time reaches 0
             return;
         }
@@ -122,7 +132,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
                 selectedQuestionIndex, handleSelectedQuestion, handleAnswerSelection, answers, handleQuizSubmission, handleRemoveAnswer, handleSubmitButton, formatTime
             },
             mac: {
-                time, setTime
+                time, setTime, loadindQuizSub
             }
         }}>
             {children}

@@ -10,16 +10,33 @@ export const viewQuiz = async (req: RequestWithUser, res: Response) => {
       return handleErrorMsg(res, 401, "Unauthorized: No user found");
     }
 
-    if (!req.user.course) {
+    const { _id: studentId, course } = req.user;
+
+    if (!course) {
       return handleErrorMsg(res, 400, "User is not assigned to any course");
     }
 
-    const quizzes = await Quiz.find({ courseId: req.user.course })
+    // Fetch attempted quizzes
+    const attemptedQuizzes = await StudentQuiz.find({ studentId })
+      .select("quizId")
+      .lean();
+    const attemptedQuizIds = new Set(
+      attemptedQuizzes.map((q) => q.quizId.toString())
+    );
+
+    // Fetch all quizzes for the course
+    const quizzes = await Quiz.find({ courseId: course })
       .select("-questions")
       .sort("-createdAt")
       .lean();
 
-    successResponse(res, quizzes, "Quizzes fetched successfully!");
+    // Map quizzes and mark completion status
+    const data = quizzes.map((q) => ({
+      ...q,
+      completed: attemptedQuizIds.has(q._id.toString()),
+    }));
+
+    successResponse(res, data, "Quizzes fetched successfully!");
   } catch (error) {
     return handleError(res, error);
   }
@@ -105,52 +122,26 @@ export const submitQuiz = async (req: RequestWithUser, res: Response) => {
   });
 
   await studentQuiz.save();
-  successResponse(res, studentQuiz, "Quiz submitted successfully");
+  successResponse(res, quizId, "Quiz submitted successfully");
 };
 
-const getStudentQuizResult = async (req: RequestWithUser, res: Response) => {
+export const studentGetResult = async (req: RequestWithUser, res: Response) => {
   try {
-    const { studentId, quizId } = req.params;
+    if (!req.user) {
+      return handleErrorMsg(res, 401, "Unauthorized: No user found");
+    }
+    const { _id: studentId } = req.user;
+    const { id } = req.params;
 
-    const quiz = await Quiz.findById(quizId);
-    if (!quiz) return res.status(404).json({ message: "Quiz not found" });
+    const result = await StudentQuiz.findOne({ studentId, quizId: id })
+      .populate("studentId", "name email")
+      .populate("quizId", "title questions")
+      .populate("answers", "question options correctAnswer");
 
-    // Fetch the student's submitted quiz attempt
-    const studentQuiz = await StudentQuiz.findOne({ studentId, quizId });
-    if (!studentQuiz)
-      return res
-        .status(404)
-        .json({ message: "Student has not attempted this quiz" });
+    if (!result) return handleErrorMsg(res, 404, "Quiz result not found");
 
-    // Map quiz questions with student's answers
-    const questionResults = quiz.questions.map((question) => {
-      const studentAnswer = studentQuiz.answers.find(
-        (ans) => ans.questionId.toString() === question._id.toString()
-      );
-
-      return {
-        questionId: question._id,
-        question: question.question,
-        options: question.options,
-        correctAnswer: question.correctAnswer,
-        selectedOption: studentAnswer?.selectedOption || null,
-        isCorrect: studentAnswer ? studentAnswer.isCorrect : false,
-        attempted: !!studentAnswer, // True if the student answered this question
-      };
-    });
-
-    // Calculate attempted questions and correct answers
-    const attemptedCount = questionResults.filter((q) => q.attempted).length;
-    const correctCount = questionResults.filter((q) => q.isCorrect).length;
-
-    res.json({
-      quizTitle: quiz.title,
-      totalQuestions: quiz.questions.length,
-      attemptedQuestions: attemptedCount,
-      correctAnswers: correctCount,
-      questionResults,
-    });
+    successResponse(res, result, "Quiz fetched successfully!");
   } catch (error) {
-    handleError(res, error);
+    return handleError(res, error);
   }
 };

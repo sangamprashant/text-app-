@@ -4,9 +4,10 @@ import App from './App.tsx'
 import './index.css'
 import { NotificationProvider } from './(providers)/NotificationContext.tsx'
 import { AppProvider } from './(providers)/AppContext.tsx'
+import { BrowserRouter } from 'react-router-dom'
 
 createRoot(document.getElementById('root')!).render(
-  <>
+  <BrowserRouter>
     <NotificationProvider>
       <AuthProvider>
         <AppProvider>
@@ -14,5 +15,5 @@ createRoot(document.getElementById('root')!).render(
         </AppProvider>
       </AuthProvider>
     </NotificationProvider>
-  </>
+  </BrowserRouter>
 )

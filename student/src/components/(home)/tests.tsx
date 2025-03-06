@@ -11,7 +11,16 @@ type Quiz = {
     completed: boolean;
 };
 
-const TestList = () => {
+interface Res {
+    data: Quiz[]
+    message: string
+}
+
+interface TestListProps {
+    handleCounts: (t: "total" | "done", v: number) => void
+}
+
+const TestList = ({ handleCounts }: TestListProps) => {
     const { token } = useAuth()
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -22,17 +31,21 @@ const TestList = () => {
 
     const fetchData = async () => {
         try {
-            const res = await apiRequest("/student.quiz", "GET", undefined, {
+            const res: Res = await apiRequest("/student.quiz", "GET", undefined, {
                 Authorization: `Bearer ${token}`,
             })
             setQuizzes(res.data);
+            handleCounts("total", res.data.length)
+
+            const completedCount = res.data.filter(d => d.completed).length;
+            handleCounts("done", completedCount);
+
         } catch (error) {
             console.error("Error fetching quizzes:", error);
         } finally {
             setLoading(false);
         }
     }
-
 
     return (
         <div className="p-6 max-w-4xl mx-auto">

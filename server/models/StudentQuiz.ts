@@ -5,7 +5,6 @@ export interface IStudentQuiz extends Document {
   quizId: mongoose.Schema.Types.ObjectId;
   courseId: mongoose.Schema.Types.ObjectId;
   startedAt: Date;
-  completedAt: Date | null;
   answers: { questionId: mongoose.Schema.Types.ObjectId; selectedOption: string; isCorrect: boolean }[];
   totalQuestions: number;
   correctAnswers: number;
@@ -17,7 +16,6 @@ const StudentQuizSchema: Schema<IStudentQuiz> = new Schema(
     quizId: { type: Schema.Types.ObjectId, ref: "Quiz", required: true },
     courseId: { type: Schema.Types.ObjectId, ref: "Course", required: true }, 
     startedAt: { type: Date, required: true, default: Date.now },
-    completedAt: { type: Date, default: null },
     answers: [
       {
         questionId: { type: Schema.Types.ObjectId, required: true, ref: "Quiz.questions" },

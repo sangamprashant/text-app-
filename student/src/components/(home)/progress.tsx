@@ -10,9 +10,15 @@ const ProgressBar = ({ progress }: { progress: number }) => {
     );
 };
 
-const ProgressDemo = () => {
-    const done = 8;
-    const total = 10;
+interface PD {
+    completedCount: {
+        total: number;
+        done: number
+    }
+}
+
+const ProgressDemo = ({ completedCount }: PD) => {
+    const { done, total } = completedCount;
     const progress = (done / total) * 100;
 
     return (

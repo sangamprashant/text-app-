@@ -7,7 +7,7 @@ const About = () => {
                 <MdOutlineInfo className="mr-2" /> About Quizly
             </h2>
             <p className="text-gray-700">
-                Quizly is an online quiz platform where **admins** create **users & teachers**, who in turn create quizzes
+                Quizly is an online quiz platform where <b>admins</b> create <b>users & teachers</b>, who in turn create quizzes
                 for students. Students can take these quizzes based on their enrolled courses.
             </p>
         </div>
