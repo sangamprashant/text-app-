@@ -1,35 +1,57 @@
-import { HiOutlineChartBar, HiOutlineTicket, HiOutlineUserGroup } from 'react-icons/hi'
+import { HiOutlineUserGroup, HiOutlineBookOpen } from "react-icons/hi";
+import { LuFileQuestion } from "react-icons/lu";
+import { FaUserGraduate } from "react-icons/fa";
 
 const Stats = () => {
-    return (
-        <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-                    <HiOutlineUserGroup size={40} className="text-blue-500" />
-                    <div>
-                        <p className="text-gray-500">Total Travelers</p>
-                        <h3 className="text-xl font-bold">8,500</h3>
-                    </div>
-                </div>
+  const iconsList = [
+    { label: "people", icon: <HiOutlineUserGroup size={40} className="text-blue-500" /> },
+    { label: "quiz", icon: <LuFileQuestion size={40} className="text-green-500" /> },
+    { label: "students", icon: <FaUserGraduate size={40} className="text-purple-500" /> },
+    { label: "courses", icon: <HiOutlineBookOpen size={40} className="text-orange-500" /> },
+  ];
 
-                <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-                    <HiOutlineTicket size={40} className="text-green-500" />
-                    <div>
-                        <p className="text-gray-500">Bookings This Month</p>
-                        <h3 className="text-xl font-bold">1,200</h3>
-                    </div>
-                </div>
+  const handleIcons = (label: string) => {
+    return iconsList.find((d) => d.label === label)?.icon;
+  };
 
-                <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-                    <HiOutlineChartBar size={40} className="text-yellow-500" />
-                    <div>
-                        <p className="text-gray-500">Revenue</p>
-                        <h3 className="text-xl font-bold">$50,000</h3>
-                    </div>
-                </div>
+  const adminList = [
+    {
+      icon: handleIcons("people"),
+      label: "Teachers",
+      value: 234,
+    },
+    {
+      icon: handleIcons("students"),
+      label: "Students",
+      value: 1045,
+    },
+    {
+      icon: handleIcons("courses"),
+      label: "Courses",
+      value: 32,
+    },
+    {
+      icon: handleIcons("quiz"),
+      label: "Quizzes",
+      value: 76,
+    },
+  ];
+
+  return (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {adminList.map((l, i) => (
+          <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4" key={i}>
+            {l.icon}
+            <div>
+              <p className="text-gray-500">{l.label}</p>
+              <h3 className="text-xl font-bold">{l.value}</h3>
             </div>
-        </>
-    )
-}
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
 
-export default Stats
+export default Stats;

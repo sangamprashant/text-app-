@@ -48,6 +48,13 @@ ADMIN_EMAIL="admin@quizly.com"
 JWT_SECRET="secretkey"
 ```
 
+`.env` for `student` and `teacher`
+
+```env
+VITE_SECRET_KEY = "my_secret_key_123"
+VITE_SERVER_KEY = "http://localhost:5000/api/v1"
+```
+
 ### **3️⃣ Run the Project**
 
 ```sh
@@ -89,7 +96,12 @@ npm start
        },
        {
          "question": "Who wrote 'To Kill a Mockingbird'?",
-         "options": ["Harper Lee", "J.K. Rowling", "Ernest Hemingway", "Mark Twain"],
+         "options": [
+           "Harper Lee",
+           "J.K. Rowling",
+           "Ernest Hemingway",
+           "Mark Twain"
+         ],
          "correctAnswer": "Harper Lee"
        },
        {
@@ -119,7 +131,12 @@ npm start
        },
        {
          "question": "Who painted the Mona Lisa?",
-         "options": ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Claude Monet"],
+         "options": [
+           "Vincent van Gogh",
+           "Pablo Picasso",
+           "Leonardo da Vinci",
+           "Claude Monet"
+         ],
          "correctAnswer": "Leonardo da Vinci"
        },
        {
@@ -154,9 +171,21 @@ npm start
 
 ---
 
+## Screenshots
+
+1. Student
+   ![Screenshot](./assets/student1.png)
+   ![Screenshot](./assets/student2.png)
+   ![Screenshot](./assets/student3.png)
+   ![Screenshot](./assets/student5.png)
+
+2. Admin & Teacher
+   ![Screenshot](./assets/admin.png)
+
+---
+
 ## **👨‍💻 Development & Contribution**
 
 If you wish to contribute, fork the repo, make changes, and submit a pull request.
 
 📌 **Happy Coding! 🚀**
-

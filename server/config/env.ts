@@ -6,6 +6,7 @@ interface EnvConfig {
   ADMIN_PASSWORD: string;
   ADMIN_EMAIL: string;
   JWT_SECRET: string;
+  PORT: number;
 }
 
 const _env: EnvConfig = {
@@ -13,6 +14,7 @@ const _env: EnvConfig = {
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "",
   ADMIN_EMAIL: process.env.ADMIN_EMAIL || "",
   JWT_SECRET: process.env.JWT_SECRET || "your-secret-key",
+  PORT: parseInt(process.env.PORT || "5000"),
 };
 
 // Validate that required variables are set
