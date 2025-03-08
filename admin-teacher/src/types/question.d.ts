@@ -3,7 +3,6 @@ interface Question {
   question: string;
   options: string[];
   correctAnswer: string;
-  time: numberl;
 }
 
 interface QuestionFormProps {

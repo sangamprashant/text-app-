@@ -179,9 +179,28 @@ npm start
    ![Screenshot](./assets/student3.png)
    ![Screenshot](./assets/student5.png)
 
-2. Admin & Teacher
+2. Admin & Teacher login
    ![Screenshot](./assets/admin.png)
 
+3. Teacher Dashboard
+    <img src="./assets/tacher1.png" alt=""/>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;width: 100%;">
+      <img src="./assets/tacher2.png" style="width: 100%;" alt=""/>
+      <img src="./assets/tacher3.png" style="width: 100%;" alt=""/>
+      <img src="./assets/tacher4.png" style="width: 100%;" alt=""/>
+      <img src="./assets/tacher5.png" style="width: 100%;" alt=""/>
+    </div>
+
+4. Admin Dashboard 
+    <img src="./assets/admin1.png" alt="" />
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;width: 100%;">
+      <img src="./assets/admin2.png" style="width: 100%;" alt="" />
+      <img src="./assets/admin3.png" style="width: 100%;" alt="" />
+      <img src="./assets/admin4.png" style="width: 100%;" alt="" />
+      <img src="./assets/admin5.png" style="width: 100%;" alt="" />
+      <img src="./assets/admin6.png" style="width: 100%;" alt="" />
+      <img src="./assets/admin7.png" style="width: 100%;" alt="" />
+    </div>
 ---
 
 ## **👨‍💻 Development & Contribution**

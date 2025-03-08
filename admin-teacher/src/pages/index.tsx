@@ -11,6 +11,7 @@ import NotFound from "./(notfound)";
 import MyStudentPage from "./(teacher)/my-student";
 import { AddQuizPage } from "./(teacher)/quiz/add";
 import { ViewQuizPage } from "./(teacher)/quiz/view";
+import StudentProfile from "./(teacher)/students-profile";
 
-export { AddCoursePage, AddQuizPage, AddStudentPage, AddTeacherPage, Dashboard, LoginPage, MyStudentPage, NotFound, SettingPage, ViewCoursePage, ViewQuizPage, ViewStudentsPage, ViewTeachersPage };
+export { AddCoursePage, AddQuizPage, AddStudentPage, AddTeacherPage, Dashboard, LoginPage, MyStudentPage, NotFound, SettingPage, StudentProfile, ViewCoursePage, ViewQuizPage, ViewStudentsPage, ViewTeachersPage };
 

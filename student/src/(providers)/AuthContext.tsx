@@ -91,6 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setToken(null);
         sessionStorage.removeItem("user");
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("tab")
         window.history.replaceState(null, "", "/");
         window.location.href = "/";
     };

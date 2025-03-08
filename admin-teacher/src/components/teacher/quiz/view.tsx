@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { apiRequest } from "../../../utilities/apis/apiRequest";
-import { useAuth } from "../../../providers/AuthenticationContext";
+import { Card, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { Table, Button, Space, Card } from "antd";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../../providers/AuthenticationContext";
+import { apiRequest } from "../../../utilities/apis/apiRequest";
 
 export const ViewQuizComponent = () => {
     const { token } = useAuth()
@@ -38,16 +38,6 @@ export const ViewQuizComponent = () => {
             dataIndex: "time",
             key: "time",
             render: (time: number) => `${time} mins`,
-        },
-        {
-            title: "Actions",
-            key: "actions",
-            render: (_, record: Question) => (
-                <Space>
-                    <Button type="primary">View</Button>
-                    <Button danger>Delete</Button>
-                </Space>
-            ),
         },
     ];
 

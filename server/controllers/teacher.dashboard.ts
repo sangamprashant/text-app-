@@ -1,26 +1,31 @@
+import { Response } from "express";
 import { Quiz } from "../models/Quiz";
 import { StudentQuiz } from "../models/StudentQuiz";
 import { User } from "../models/User";
+import { RequestWithUser } from "../types/request";
+import { handleError, handleErrorMsg, successResponse } from "../utility";
 
-export const getCounts = async () => {
+export const getCounts = async (req: RequestWithUser, res: Response) => {
   try {
-    const studentCount = await User.countDocuments({
-      role: "student",
-      course: "<courseId>",
-    });
-    const quizCount = await Quiz.countDocuments({ courseId: "<courseId>" });
-    const studentQuizCount = await StudentQuiz.countDocuments({
-      courseId: "<courxeId>",
-    });
+    if (!req.user) {
+      return handleErrorMsg(res, 401, "Unauthorized: No user found");
+    }
 
-    const resBody = {
-      quizCount,
-      studentQuizCount,
-      studentCount,
-    };
+    const { course } = req.user;
 
-    console.log(resBody);
+    const [studentCount, quizCount, studentQuizCount] = await Promise.all([
+      User.countDocuments({ role: "student", course }),
+      Quiz.countDocuments({ courseId: course }),
+      StudentQuiz.countDocuments({ courseId: course }),
+    ]);
+
+    return successResponse(
+      res,
+      { quizCount, studentQuizCount, studentCount },
+      "Counts retrieved successfully"
+    );
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching counts:", error);
+    handleError(res, error);
   }
 };

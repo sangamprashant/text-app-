@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom"
 import SideBar from "./components/SideBar"
-import { AddCoursePage, AddQuizPage, AddStudentPage, AddTeacherPage, Dashboard, LoginPage, MyStudentPage, NotFound, SettingPage, ViewCoursePage, ViewQuizPage, ViewStudentsPage, ViewTeachersPage } from "./pages"
+import { AddCoursePage, AddQuizPage, AddStudentPage, AddTeacherPage, Dashboard, LoginPage, MyStudentPage, NotFound, SettingPage, StudentProfile, ViewCoursePage, ViewQuizPage, ViewStudentsPage, ViewTeachersPage } from "./pages"
 import { useAuth } from "./providers/AuthenticationContext"
 
 function App() {
@@ -38,6 +38,7 @@ function App() {
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/settings" element={<SettingPage />} />
                       <Route path="/students" element={<MyStudentPage />} />
+                      <Route path="/students-profile/:id" element={<StudentProfile />} />
                       <Route path="/quiz" element={<ViewQuizPage />} />
                       <Route path="/quiz/add" element={<AddQuizPage />} />
                       <Route path="*" element={<NotFound />} />

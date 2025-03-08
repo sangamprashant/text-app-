@@ -1,9 +1,9 @@
-import { Table } from "antd";
+import { Table, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../providers/AuthenticationContext";
 import { useNotificationContext } from "../../../providers/NotificationContext";
 import { apiRequest, errorMsg } from "../../../utilities/apis/apiRequest";
-
+import { useNavigate } from "react-router-dom";
 
 interface Students {
     _id: string;
@@ -13,8 +13,9 @@ interface Students {
 }
 
 const MyStudentsComponent = () => {
-    const { token } = useAuth()
-    const { _notification } = useNotificationContext()
+    const { token } = useAuth();
+    const { _notification } = useNotificationContext();
+    const navigate = useNavigate()
     const [users, setUsers] = useState<Students[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -41,6 +42,10 @@ const MyStudentsComponent = () => {
         fetchUsers();
     }, [token]);
 
+    const handleView = (record: Students) => {
+        navigate(`/students-profile/${record._id}`)
+    };
+
     const columns = [
         {
             title: "Name",
@@ -51,6 +56,15 @@ const MyStudentsComponent = () => {
             title: "Email",
             dataIndex: "email",
             key: "email",
+        },
+        {
+            title: "Action",
+            key: "action",
+            render: (_: any, record: Students) => (
+                <Button type="primary" onClick={() => handleView(record)}>
+                    View
+                </Button>
+            ),
         },
     ];
 
@@ -64,7 +78,7 @@ const MyStudentsComponent = () => {
                 bordered
             />
         </div>
-    )
-}
+    );
+};
 
-export default MyStudentsComponent
+export default MyStudentsComponent;

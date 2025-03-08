@@ -57,7 +57,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     );
 
     // Remove sensitive data before sending response
-    const { password: _, _id, ...userData } = user;
+    const { password: _, ...userData } = user;
     successResponse(
       res,
       {
